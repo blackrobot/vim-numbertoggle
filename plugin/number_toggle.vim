@@ -79,28 +79,22 @@ function! InsertEnter()
   call UpdateMode()
 endfunc
 
-" Automatically set relative line numbers when opening a new document
-autocmd BufNewFile * :call UpdateMode()
-autocmd BufReadPost * :call UpdateMode()
-autocmd FilterReadPost * :call UpdateMode()
-autocmd FileReadPost * :call UpdateMode()
+augroup AutoNumToggle
+  autocmd!
 
-" Automatically switch to absolute numbers when focus is lost and switch back
-" when the focus is regained.
-autocmd FocusLost * :call FocusLost()
-autocmd FocusGained * :call FocusGained()
-autocmd WinLeave * :call FocusLost()
-autocmd WinEnter * :call FocusGained()
+  " Automatically set relative line numbers when opening a new document
+  autocmd BufNewFile,BufReadPost,FilterReadPost,FileReadPost * :call UpdateMode()
 
-" Switch to absolute line numbers when the window loses focus and switch back
-" to relative line numbers when the focus is regained.
-autocmd WinLeave * :call FocusLost()
-autocmd WinEnter * :call FocusGained()
+  " Automatically switch to absolute numbers when focus is lost and switch back
+  " when the focus is regained.
+  autocmd FocusLost,WinLeave * :call FocusLost()
+  autocmd FocusGained,WinEnter * :call FocusGained()
 
-" Switch to absolute line numbers when entering insert mode and switch back to
-" relative line numbers when switching back to normal mode.
-autocmd InsertEnter * :call InsertEnter()
-autocmd InsertLeave * :call InsertLeave()
+  " Switch to absolute line numbers when entering insert mode and switch back to
+  " relative line numbers when switching back to normal mode.
+  autocmd InsertEnter * :call InsertEnter()
+  autocmd InsertLeave * :call InsertLeave()
+augroup END
 
 " ensures default behavior / backward compatibility
 if ! exists ( 'g:UseNumberToggleTrigger' )
